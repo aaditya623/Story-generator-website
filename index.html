@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Story Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #chatbot {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 500px;
+            text-align: center; /* Center the content within #chatbot */
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #chatbot-form {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #story {
+            margin-top: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div id="chatbot">
+        <img src="https://img.freepik.com/premium-vector/teacher-read-story-book-while-student-sit-listening_97632-7316.jpg" alt="Story Image" style="width: 100%; max-width: 500px; object-fit: cover; margin-top: 20px;">
+        <h1>Chatbot Story Generator</h1>
+        <form id="chatbot-form">
+            <input type="text" id="user-input" placeholder="Type your input here...">
+            <button type="submit">Submit</button>
+        </form>
+        <div id="story"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script>
+        const chatbotForm = document.getElementById('chatbot-form');
+        const userInput = document.getElementById('user-input');
+        const story = document.getElementById('story');
+
+        chatbotForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const API_KEY = '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';
+
+            const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+                prompt: userInput.value,
+                max_tokens: 100,
+                n: 1,
+                stop: null,
+                temperature: 0.7,
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const generatedStory = response.data.choices[0].text;
+            story.innerHTML = `<p>${generatedStory}</p>`;
+
+            userInput.value = '';
+        });
+    </script>
+</body>
+</html>
